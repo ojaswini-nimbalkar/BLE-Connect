@@ -1,0 +1,74 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height = "match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:text = "Device Configuration"
+        android:id = "@+id/txtTitle"
+        android:layout_centerHorizontal = "true"
+        android:textSize = "35dp"
+        android:layout_gravity="center"/>
+    <TextView
+        android:id = "@+id/txtDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft= "10dp"
+        android:textSize="20dp" />
+    <TextView
+        android:id = "@+id/txtMac"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft= "10dp"
+        android:textSize="20dp" />
+
+    <Space
+        android:id="@+id/idSpace"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/txtTitle"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SEC"
+        android:layout_marginLeft= "10dp"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id = "@+id/editSC"
+        android:layout_width = "match_parent"
+        android:layout_height = "50dp"
+        android:hint = "Enter SC"
+        android:layout_marginLeft= "10dp"
+        android:layout_marginRight= "10dp"
+        android:background="@drawable/border"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ID"
+        android:layout_marginLeft= "10dp"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id = "@+id/editID"
+        android:layout_width = "match_parent"
+        android:layout_height = "50dp"
+        android:hint = "Enter ID"
+        android:layout_marginLeft= "10dp"
+        android:layout_marginRight= "10dp"
+        android:background="@drawable/border"/>
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:id="@+id/btnSave"
+        android:layout_alignParentBottom="true"/>
+
+</LinearLayout>
