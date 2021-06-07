@@ -109,21 +109,21 @@ public class BluetoothLeService extends Service {
     private final byte header3 = 0x00;
 
     private float convertString2Float(String hex){
-        Log.d(TAG, "endianness:" + hex);
+       // Log.d(TAG, "endianness:" + hex);
         StringBuilder swapEndian = new StringBuilder();
         for(int i=hex.length(); i >= 2; i=i-2){
             swapEndian.append(hex.substring(i-2, i));
         }
-        Log.d(TAG, "swap endianness:" + swapEndian);
+       // Log.d(TAG, "swap endianness:" + swapEndian);
         Long i = Long.parseLong(swapEndian.toString(), 16);
         Float f = Float.intBitsToFloat(i.intValue());
-        Log.d(TAG, "floating point:" + f.toString());
+        //Log.d(TAG, "floating point:" + f.toString());
         return f;
     }
- //on a call, 5 mins
+
     private String decodeMessage(String message){
         int count=0;
-        Log.d(TAG, "decodeMessage:" + message);
+       // Log.d(TAG, "decodeMessage:" + message);
         StringBuffer msg = new StringBuffer();
         String[] arrOfStr = message.split("0100");
         for (String item : arrOfStr) {
@@ -165,11 +165,11 @@ public class BluetoothLeService extends Service {
                     stringBuilder.append(String.format("%02X", byteChar));
                 if(data[0] == header1){
                     String result = decodeMessage(stringBuilder.toString());
-                    Log.d(TAG, "result:" + result);
+                    //Log.d(TAG, "result:" + result);
                     intent.putExtra(EXTRA_DATA,result);
                     sendBroadcast(intent);
                 }
-                Log.d(TAG, "Byte data:" + stringBuilder.toString());
+               // Log.d(TAG, "Byte data:" + stringBuilder.toString());
             }else{
                 String notify = "Can't read data from device\n";
                 intent.putExtra(EXTRA_DATA, notify);
@@ -321,23 +321,40 @@ public class BluetoothLeService extends Service {
      * @param characteristic Characteristic to act on.
      * @param enabled If true, enable notification.  False otherwise.
      */
-    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
+//new changes:
+    protected static final UUID CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+
+    public boolean setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
+            return false;
         }
-        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled); //i enabled this
 
-        // This is specific to Heart Rate Measurement.
+
         if (UUID_CHARACTERISTIC.equals(characteristic.getUuid())) {
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                    UUID.fromString(SampleGattAttributes.GATT_SERVICE));
+            Log.d(TAG,"checking for characteristic uuid");
+           // BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                 //   UUID.fromString(SampleGattAttributes.GATT_CHARACTERISTIC)); //GATT_SERVICE previously
+           //newly added
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID);
+            descriptor.setValue(enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : new byte[]{0x00, 0x00}); //NOTIFICATION
+            Log.d(TAG,"value of descriptor is: "+ descriptor.getUuid().toString());
+            return mBluetoothGatt.writeDescriptor(descriptor); //descriptor write operation successfully started?
+
+            /*
             if(descriptor != null){
-                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                Log.d(TAG,"Descriptor is not null");
+                Log.d(TAG,"value of descriptor is: "+ descriptor.getUuid().toString());
+                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);  //previously ENABLE_NOTIFICATION_VALUE
                 mBluetoothGatt.writeDescriptor(descriptor);
             }
+
+             */
+
         }
+        return true;
     }
 
     /**

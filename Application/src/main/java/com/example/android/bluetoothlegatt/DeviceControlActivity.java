@@ -169,7 +169,7 @@ public class DeviceControlActivity extends Activity {
             // it first so it doesn't update the data field on the user interface.
             if (mNotifyCharacteristic != null) {
                 mBluetoothLeService.setCharacteristicNotification(
-                        mNotifyCharacteristic, false);
+                        mNotifyCharacteristic, false); //false previously
                 mNotifyCharacteristic = null;
             }
 

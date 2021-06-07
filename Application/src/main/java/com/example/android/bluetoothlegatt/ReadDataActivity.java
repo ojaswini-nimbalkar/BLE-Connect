@@ -62,6 +62,9 @@ public class ReadDataActivity extends Activity {
             @Override
             public void onClick(View view) {
                 readCharacteristic();
+                //new changes
+
+
             }
         });
 
@@ -101,6 +104,7 @@ public class ReadDataActivity extends Activity {
                 Log.e(TAG, "Unable to initialize Bluetooth");
                 finish();
             }
+
             // Automatically connects to the device upon successful start-up initialization.
             mBluetoothLeService.connect(mDeviceAddress);
         }
@@ -142,14 +146,17 @@ public class ReadDataActivity extends Activity {
         }
         final int charaProp =  mSensorDataCharacteristic.getProperties();
         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+            Log.d(TAG, "Checking for notifying property");
+
             mNotifyCharacteristic = mSensorDataCharacteristic;
             mBluetoothLeService.setCharacteristicNotification(
-                    mSensorDataCharacteristic, true);
+                    mNotifyCharacteristic, true); //mSensorDataCharcteristics
+            //mBluetoothLeService.readCharacteristic(mSensorDataCharacteristic); //newly added
         }
         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0){
             if (mNotifyCharacteristic != null) {
-                mBluetoothLeService.setCharacteristicNotification(
-                        mNotifyCharacteristic, false);
+                Log.d(TAG, "entered this loop since notification is enabled");
+                mBluetoothLeService.setCharacteristicNotification(mNotifyCharacteristic, true);  //false previously
                 mNotifyCharacteristic = null;
             }
             mBluetoothLeService.readCharacteristic(mSensorDataCharacteristic);
